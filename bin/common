@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+function get-container {
+    awk 'BEGIN { FS = "[ \t]*=[ \t]*" }; $1 ~ /container/ { print $2 }' "$1"
+}
