@@ -1,2 +1,18 @@
 #!/usr/bin/env bash
 # bin/detect BUILD_DIR
+
+BUILD_DIR="$1"
+
+SUPPORTED_CONTAINERS=(jboss-as-7)
+
+if [ ! -f "$BUILD_DIR/system.properties" ]; then
+    echo "no" && exit 1
+fi
+
+CONTAINER=$(awk 'BEGIN { FS = "[ \t]*=[ \t]*" }; $1 ~ /container/ { print $2 }' "$BUILD_DIR/system.properties")
+
+if [[ "${SUPPORTED_CONTAINERS[*]}" =~ "$CONTAINER" ]]; then
+    echo "$CONTAINER" && exit 0
+else
+    echo "no" && exit 1
+fi
