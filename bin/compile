@@ -3,7 +3,6 @@
 
 # fail fast
 set -e
-set -x
 
 BIN_DIR=$(cd $(dirname $0); pwd)
 BUILD_DIR="$1"
