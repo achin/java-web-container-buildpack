@@ -37,12 +37,12 @@ container=$(get_app_system_value ${BUILD_DIR}/container.properties "container")
 echo "-----> Detected container ${container}..."
 
 # check container support
-if [ ! -d ${CONTAINER_DIR}/containers/${container} ]; then
+if [ ! -d ${CONTAINER_DIR}/${container} ]; then
     echo "-----> Unsupported container!" && exit 1
 fi
 
 # download container
-containerUrl=$(cat ${CONTAINER_DIR}/containers/${container}/url)
+containerUrl=$(cat ${CONTAINER_DIR}/${container}/url)
 echo -n "-----> Downloading ${containerUrl}..."
 containerFile=$(basename "${containerUrl}")
 if [ -f "${CACHE_DIR}/$containerFile" ]; then
@@ -57,7 +57,7 @@ rm -rf ${BUILD_DIR}/container
 mkdir -p ${BUILD_DIR}/container
 echo -n "-----> Installing container..."
 tar xf "${CACHE_DIR}/${containerFile}" -C ${BUILD_DIR}/container --strip-components 1
-for p in ${CONTAINER_DIR}/containers/${container}/patches/*.patch; do
+for p in ${CONTAINER_DIR}/${container}/patches/*.patch; do
     git apply --directory=${BUILD_DIR}/container "${p}"
 done
 echo " done"
@@ -73,7 +73,7 @@ cd ${oldDir}
 # create default procfile
 if [ ! -f $BUILD_DIR/Procfile ]; then
     echo "-----> Creating default procfile"
-    cp "${CONTAINER_DIR}/containers/${container}/Procfile" $BUILD_DIR
+    cp "${CONTAINER_DIR}/${container}/Procfile" $BUILD_DIR
 fi
 
 # setup environment
