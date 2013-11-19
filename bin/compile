@@ -66,3 +66,17 @@ echo "-----> Detected war ${warFile}..."
 cd ${BUILD_DIR}/container/standalone/deployments
 ln -sf "../../../${warFile}" ROOT.war
 cd ${BIN_DIR}
+
+# create default procfile
+if [ ! -f $BUILD_DIR/Procfile ]; then
+    echo "-----> Creating default procfile"
+    echo 'web: container/bin/standalone.sh -Djboss.http.port=$PORT' > $BUILD_DIR/Procfile
+fi
+
+# setup environment
+PROFILE_PATH="$BUILD_DIR/.profile.d/java.sh"
+mkdir -p $(dirname $PROFILE_PATH)
+echo 'export PATH="/app/.jdk/bin:$PATH"' >> $PROFILE_PATH
+echo 'export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Djava.rmi.server.useCodebaseOnly=true"' >> $PROFILE_PATH
+
+echo "-----> Done!"
