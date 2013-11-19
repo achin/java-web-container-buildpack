@@ -9,6 +9,9 @@ BIN_DIR=$(cd $(dirname $0); pwd)
 BUILD_DIR="$1"
 CACHE_DIR="$2"
 
+pwd
+ls
+
 curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
 . bin/java
 
