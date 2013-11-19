@@ -1,1 +1,1 @@
-web: container/bin/standalone.sh -Djboss.http.port=$PORT
+web: container/bin/standalone.sh -Djboss.bind.address=0.0.0.0 -Djboss.http.port=$PORT
