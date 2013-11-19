@@ -38,11 +38,18 @@ if [[ ! "${supportedContainers[*]}" =~ "$container" ]]; then
 fi
 
 # download container
-container_url=$(get_container_url ${container})
-echo -n "-----> Downloading ${container_url}..."
-if [ -f ${CACHE_DIR}/"$(basename ${container_url})" ]; then
+containerUrl=$(get_container_url ${container})
+echo -n "-----> Downloading ${containerUrl}..."
+containerFile=$(basename "${containerUrl}")
+if [ -f "${CACHE_DIR}/$containerFile" ]; then
     echo " found cached copy"
 else
-    curl --silent --location "${container_url}" > "${CACHE_DIR}/$(basename ${container_url})"
+    curl --silent --location "${containerUrl}" > "${CACHE_DIR}/$(basename ${containerUrl})"
     echo " done"
 fi
+
+# install container
+rm -rf ${BUILD_DIR}/container
+mkdir -p ${BUILD_DIR}/container
+echo -n "-----> Installing container..."
+tar xf "${CACHE_DIR}/$containerFile" -C ${BUILD_DIR}/container --strip-components 1
