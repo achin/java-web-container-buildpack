@@ -9,7 +9,7 @@ This build pack currently supports the following containers.
 Create a `container.properties` file in the root of your project directory and set `container` to the keyword for the container you want. e.g. `jboss-as-7`.
 
 ## Choose a WAR to Deploy
-In the same `container.properties` file from above, set `war` to the path of the WAR you want to deploy, relative to your project root. This webapp will be deployed to the root context of the container.
+In the same `container.properties` file from above, set `war` to the name of the warfile in the `webapps` directory. Subdirectories are not allowed. This webapp will be deployed to the root context of the container.
 
 ## Choose a JDK (optional)
 Create a `system.properties` file in the root of your project directory and set `java.runtime.version` to, for example, `1.7`.

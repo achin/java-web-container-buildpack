@@ -67,7 +67,7 @@ warFile=$(get_app_system_value ${BUILD_DIR}/container.properties "war")
 echo "-----> Detected war ${warFile}..."
 oldDir=$(pwd)
 cd ${BUILD_DIR}/container/standalone/deployments
-ln -sf "../../../${warFile}" ROOT.war
+ln -sf "../../../webapps/${warFile}" ROOT.war
 cd ${oldDir}
 
 # create default procfile
