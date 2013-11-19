@@ -9,9 +9,40 @@ CACHE_DIR="$2"
 
 . bin/common
 
-CONTAINER=$(get_container "$BUILD_DIR/system.properties")
-echo "-----> Detected container $CONTAINER..."
+curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
+. bin/java
 
-CONTAINER_URL=$(get_container_url "$CONTAINER")
+# recreate cache dir if it doesn't exit
+mkdir -p $CACHE_DIR
 
-echo "-----> Downloading $CONTAINER_URL..."
+# create default system.properties
+if [ ! -f ${BUILD_DIR}/system.properties ]; then
+  echo "java.runtime.version=1.6" > ${BUILD_DIR}/system.properties
+fi
+
+# install JDK
+javaVersion=$(detect_java_version ${BUILD_DIR})
+echo -n "-----> Installing OpenJDK ${javaVersion}..."
+install_java ${BUILD_DIR} ${javaVersion}
+jdk_overlay ${BUILD_DIR}
+echo " done"
+
+# detect container
+container=$(get_app_system_value ${BUILD_DIR}/container.properties "container")
+echo "-----> Detected container ${container}..."
+
+# check container support
+supportedContainers=$(get_supported_containers)
+if [[ ! "${supportedContainers[*]}" =~ "$container" ]]; then
+    echo "-----> Unsupported container!" && exit 1
+fi
+
+# download container
+container_url=$(get_container_url ${container})
+echo -n "-----> Downloading ${container_url}..."
+if [ -f ${CACHE_DIR}/"$(basename ${container_url})" ]; then
+    echo " found cached copy"
+else
+    curl --silent --location "${container_url}" > "${CACHE_DIR}/$(basename ${container_url})"
+    echo " done"
+fi
