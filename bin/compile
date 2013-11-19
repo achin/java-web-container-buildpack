@@ -4,6 +4,7 @@
 # fail fast
 set -e
 
+BIN_DIR=$(cd $(dirname $0); pwd)
 BUILD_DIR="$1"
 CACHE_DIR="$2"
 
@@ -53,3 +54,15 @@ rm -rf ${BUILD_DIR}/container
 mkdir -p ${BUILD_DIR}/container
 echo -n "-----> Installing container..."
 tar xf "${CACHE_DIR}/$containerFile" -C ${BUILD_DIR}/container --strip-components 1
+find containers/${container}/patches \
+    -type f \
+    -name "*.patch" \
+    -exec git apply --directory=${BUILD_DIR}/container {} \;
+echo " done"
+
+# deploy war
+warFile=$(get_app_system_value ${BUILD_DIR}/container.properties "war")
+echo "-----> Detected war ${warFile}..."
+cd ${BUILD_DIR}/container/standalone/deployments
+ln -sf "../../../${warFile}" ROOT.war
+cd ${BIN_DIR}

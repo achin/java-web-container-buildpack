@@ -1,0 +1,28 @@
+From 799731c670ad665065eaed21bec5ed39ca27aeed Mon Sep 17 00:00:00 2001
+From: Alex Chin <achin@42six.com>
+Date: Mon, 18 Nov 2013 15:49:32 -0500
+Subject: [PATCH 2/2] Allow HTTP and HTTPS ports to be specified with system
+ variables.
+
+---
+ standalone/configuration/standalone.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/standalone/configuration/standalone.xml b/standalone/configuration/standalone.xml
+index d774e16..ef61148 100644
+--- a/standalone/configuration/standalone.xml
++++ b/standalone/configuration/standalone.xml
+@@ -293,8 +293,8 @@
+         <socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/>
+         <socket-binding name="management-https" interface="management" port="${jboss.management.https.port:9443}"/>
+         <socket-binding name="ajp" port="8009"/>
+-        <socket-binding name="http" port="8080"/>
+-        <socket-binding name="https" port="8443"/>
++        <socket-binding name="http" port="${jboss.http.port:8080}"/>
++        <socket-binding name="https" port="${jboss.https.port:8443}"/>
+         <socket-binding name="osgi-http" interface="management" port="8090"/>
+         <socket-binding name="remoting" port="4447"/>
+         <socket-binding name="txn-recovery-environment" port="4712"/>
+-- 
+1.8.3.4 (Apple Git-47)
+

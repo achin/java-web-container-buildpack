@@ -1,0 +1,32 @@
+From 723655f8a625eda0d24d1ba13ae75a9613b2e1db Mon Sep 17 00:00:00 2001
+From: Alex Chin <achin@42six.com>
+Date: Mon, 18 Nov 2013 15:44:47 -0500
+Subject: [PATCH 1/2] Don't deploy the default root application.
+
+---
+ standalone/configuration/standalone.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/standalone/configuration/standalone.xml b/standalone/configuration/standalone.xml
+index 2fcbf1e..d774e16 100644
+--- a/standalone/configuration/standalone.xml
++++ b/standalone/configuration/standalone.xml
+@@ -255,7 +255,7 @@
+         </subsystem>
+         <subsystem xmlns="urn:jboss:domain:web:1.1" default-virtual-server="default-host" native="false">
+             <connector name="http" protocol="HTTP/1.1" scheme="http" socket-binding="http"/>
+-            <virtual-server name="default-host" enable-welcome-root="true">
++            <virtual-server name="default-host" enable-welcome-root="false">
+                 <alias name="localhost"/>
+                 <alias name="example.com"/>
+             </virtual-server>
+@@ -303,4 +303,4 @@
+             <remote-destination host="localhost" port="25"/>
+         </outbound-socket-binding>
+     </socket-binding-group>
+-</server>
+\ No newline at end of file
++</server>
+-- 
+1.8.3.4 (Apple Git-47)
+
