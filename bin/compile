@@ -59,11 +59,11 @@ done
 echo " done"
 
 # deploy wars
-echo "-----> Detected $(ls -l ${BUILD_DIR}/webapps/*.war | wc -l | sed -Ee 's/ /g') webapp(s)"
+echo "-----> Detected $(ls -l ${BUILD_DIR}/webapps/*.war | wc -l | sed -Ee 's/ //g') webapp(s)"
 oldDir=$(pwd)
 cd ${BUILD_DIR}/container/standalone/deployments
 for war in ${BUILD_DIR}/webapps/*.war; do
-    ln -sf "../../../webapps/${war}"
+    ln -sf "../../../webapps/$(basename ${war})"
 done
 cd ${oldDir}
 
