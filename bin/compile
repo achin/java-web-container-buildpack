@@ -12,6 +12,7 @@ CACHE_DIR="$2"
 pwd
 ls
 ls $BUILD_DIR
+find .
 
 curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
 . bin/java
