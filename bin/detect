@@ -5,13 +5,13 @@ BUILD_DIR="$1"
 
 . bin/common
 
-SUPPORTED_CONTAINERS=(jboss-as-7)
+SUPPORTED_CONTAINERS=$(get_supported_containers)
 
 if [ ! -f "$BUILD_DIR/system.properties" ]; then
     echo "no" && exit 1
 fi
 
-CONTAINER=$(get-container "$BUILD_DIR/system.properties")
+CONTAINER=$(get_container "$BUILD_DIR/system.properties")
 
 if [[ "${SUPPORTED_CONTAINERS[*]}" =~ "$CONTAINER" ]]; then
     echo "$CONTAINER" && exit 0

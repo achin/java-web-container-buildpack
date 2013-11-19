@@ -1,2 +1,17 @@
 #!/usr/bin/env bash
 # bin/compile BUILD_DIR CACHE_DIR
+
+# fail fast
+set -e
+
+BUILD_DIR="$1"
+CACHE_DIR="$2"
+
+. bin/common
+
+CONTAINER=$(get_container "$BUILD_DIR/system.properties")
+echo "-----> Detected container $CONTAINER..."
+
+CONTAINER_URL=$(get_container_url "$CONTAINER")
+
+echo "-----> Downloading $CONTAINER_URL..."
