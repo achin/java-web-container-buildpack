@@ -1,5 +1,5 @@
 # Buildpack: Java Web Container
-This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpack) for Java web applications. It accepts a pre-build war file and uses OpenJDK to run it.
+This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpack) for Java web applications. It accepts a pre-built war file and uses OpenJDK to run it.
 
 This build pack currently supports the following containers.
 
