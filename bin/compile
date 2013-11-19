@@ -8,8 +8,6 @@ BIN_DIR=$(cd $(dirname $0); pwd)
 BUILD_DIR="$1"
 CACHE_DIR="$2"
 
-. bin/common
-
 curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
 . bin/java
 
@@ -33,19 +31,18 @@ container=$(get_app_system_value ${BUILD_DIR}/container.properties "container")
 echo "-----> Detected container ${container}..."
 
 # check container support
-supportedContainers=$(get_supported_containers)
-if [[ ! "${supportedContainers[*]}" =~ "$container" ]]; then
+if [ ! -d containers/${container} ]; then
     echo "-----> Unsupported container!" && exit 1
 fi
 
 # download container
-containerUrl=$(get_container_url ${container})
+containerUrl=$(cat containers/${container}/url)
 echo -n "-----> Downloading ${containerUrl}..."
 containerFile=$(basename "${containerUrl}")
 if [ -f "${CACHE_DIR}/$containerFile" ]; then
     echo " found cached copy"
 else
-    curl --silent --location "${containerUrl}" > "${CACHE_DIR}/$(basename ${containerUrl})"
+    curl --silent --location "${containerUrl}" > "${CACHE_DIR}/${containerFile}"
     echo " done"
 fi
 
@@ -53,24 +50,24 @@ fi
 rm -rf ${BUILD_DIR}/container
 mkdir -p ${BUILD_DIR}/container
 echo -n "-----> Installing container..."
-tar xf "${CACHE_DIR}/$containerFile" -C ${BUILD_DIR}/container --strip-components 1
-find containers/${container}/patches \
-    -type f \
-    -name "*.patch" \
-    -exec git apply --directory=${BUILD_DIR}/container {} \;
+tar xf "${CACHE_DIR}/${containerFile}" -C ${BUILD_DIR}/container --strip-components 1
+for p in containers/${container}/patches/*.patch; do
+    git apply --directory=${BUILD_DIR}/container "${p}"
+done
 echo " done"
 
 # deploy war
 warFile=$(get_app_system_value ${BUILD_DIR}/container.properties "war")
 echo "-----> Detected war ${warFile}..."
+oldDir=$(pwd)
 cd ${BUILD_DIR}/container/standalone/deployments
 ln -sf "../../../${warFile}" ROOT.war
-cd ${BIN_DIR}
+cd ${oldDir}
 
 # create default procfile
 if [ ! -f $BUILD_DIR/Procfile ]; then
     echo "-----> Creating default procfile"
-    echo 'web: container/bin/standalone.sh -Djboss.http.port=$PORT' > $BUILD_DIR/Procfile
+    cp "containers/${container}/Procfile" $BUILD_DIR
 fi
 
 # setup environment

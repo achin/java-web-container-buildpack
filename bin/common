@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-function get_supported_containers {
-    ls containers
-}
-
 function get_container_url {
     if [ -f containers/${1}/url ]; then
         cat containers/${1}/url
