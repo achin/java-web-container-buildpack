@@ -3,16 +3,11 @@
 
 # fail fast
 set -e
-set -x
 
 BIN_DIR=$(cd $(dirname $0); pwd)
 BUILD_DIR="$1"
 CACHE_DIR="$2"
 CONTAINER_DIR="${BIN_DIR}/../containers"
-
-pwd
-find .
-find ${BIN_DIR}
 
 curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
 . bin/java
