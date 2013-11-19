@@ -3,6 +3,7 @@
 
 # fail fast
 set -e
+set -x
 
 BIN_DIR=$(cd $(dirname $0); pwd)
 BUILD_DIR="$1"
@@ -57,12 +58,13 @@ for p in ${CONTAINER_DIR}/${container}/patches/*.patch; do
 done
 echo " done"
 
-# deploy war
-warFile=$(get_app_system_value ${BUILD_DIR}/container.properties "war")
-echo "-----> Detected war ${warFile}..."
+# deploy wars
+echo "-----> Detected $(ls -l ${BUILD_DIR}/webapps/*.war | wc -l | sed -Ee 's/ /g') webapp(s)"
 oldDir=$(pwd)
 cd ${BUILD_DIR}/container/standalone/deployments
-ln -sf "../../../webapps/${warFile}" ROOT.war
+for war in ${BUILD_DIR}/webapps/*.war; do
+    ln -sf "../../../webapps/${war}"
+done
 cd ${oldDir}
 
 # create default procfile
